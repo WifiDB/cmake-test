@@ -1,4 +1,4 @@
-name: node-ci
+name: cmake-ci
 
 on:
   workflow_dispatch:
@@ -20,8 +20,6 @@ jobs:
           - runs-on: macos-13
             arch: x86_64
           - runs-on: macos-14
-            arch: arm64
-          - runs-on: [self-hosted, linux, ARM64]
             arch: arm64
     continue-on-error: true
     env:
