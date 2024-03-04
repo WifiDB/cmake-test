@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 
 project(DownloadFile)
 
-include(Download)
-
 string(RANDOM LENGTH 32 _TMP)
 set(_TMP "${CMAKE_BINARY_DIR}/${_TMP}")
 set(_URL "https://registry.npmjs.org/nan/-/nan-2.18.0.tgz")
