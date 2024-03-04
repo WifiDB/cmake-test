@@ -1,0 +1,62 @@
+name: node-ci
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+concurrency:
+  # cancel jobs on PRs only
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  test:
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runs-on: macos-13
+            arch: x86_64
+          - runs-on: macos-14
+            arch: arm64
+          - runs-on: [self-hosted, linux, ARM64]
+            arch: arm64
+    continue-on-error: true
+    env:
+      BUILDTYPE: "Release"
+
+    defaults:
+      run:
+        working-directory: ./
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup submodules
+        shell: bash
+        run: |
+          auth_header="$(git config --local --get http.https://github.com/.extraheader)"
+          git submodule sync --recursive
+          git -c core.longpaths=true -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive || true
+
+      - name: Get OS Architecture
+        if: runner.os == 'MacOS' || runner.os == 'Linux'
+        run: uname -m
+
+      - name: Cache cmake-node-module deps
+        uses: actions/cache@v4
+        with:
+          # downloaded with platform/node/cmake/module.cmake
+          path: build/headers
+          key: ${{ runner.os }}-${{ runner.arch }}-cmake-node-module-deps
+
+      - name: Configure maplibre-native (MacOS)
+        if: runner.os == 'MacOS'
+        run: |
+          cmake . -B build
