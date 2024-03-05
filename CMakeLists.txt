@@ -13,7 +13,7 @@ function(download_file dst_file src_url)
   list(GET _STATUS 0 _STATUS_CODE)
   if(NOT _STATUS_CODE EQUAL 0)
     list(GET _STATUS 1 _STATUS_MESSAGE)
-    message(FATAL_ERROR "Failed to download ${_TYPE}: ${_STATUS_MESSAGE}")
+    message(FATAL_ERROR "Failed to download: ${_STATUS_MESSAGE}")
   else()
     message(STATUS "File downloaded successfully.")
 
