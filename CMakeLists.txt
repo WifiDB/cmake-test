@@ -9,12 +9,14 @@ function(download_file dst_file src_url)
   message(dst_file="${dst_file}")
   message(src_url="${src_url}")
   # Download the file
-  file(DOWNLOAD ${src_url} ${dst_file} STATUS _STATUS TLS_VERIFY ON)
+  file(DOWNLOAD "${src_url}" "${dst_file}" STATUS _STATUS TLS_VERIFY ON)
   list(GET _STATUS 0 _STATUS_CODE)
   if(NOT _STATUS_CODE EQUAL 0)
-    message(STATUS "File downloaded successfully.")
+    list(GET _STATUS 1 _STATUS_MESSAGE)
+    message(FATAL_ERROR "Failed to download ${_TYPE}: ${_STATUS_MESSAGE}")
   else()
-    message(FATAL_ERROR "File download failed.")
+    message(STATUS "File downloaded successfully.")
+
   endif()
 endfunction()
 
