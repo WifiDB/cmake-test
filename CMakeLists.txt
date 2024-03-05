@@ -1,11 +1,25 @@
 cmake_minimum_required(VERSION 3.5)
+project(DownloadTest)
 
-project(DownloadFile)
+# Define a function to download a file from a URL
+function(download_file dst_file src_url)
+  # Create the destination directory if it doesn't exist
+  file(MAKE_DIRECTORY ${dst_file})
 
-file(DOWNLOAD "https://registry.npmjs.org/nan/-/nan-2.18.0.tgz" STATUS _STATUS TLS_VERIFY OFF)
-list(GET _STATUS 0 _STATUS_CODE)
-if(NOT _STATUS_CODE EQUAL 0)
+  # Download the file
+  file(DOWNLOAD ${src_url} ${dst_file} STATUS _STATUS TLS_VERIFY OFF)
+  list(GET _STATUS 0 _STATUS_CODE)
+  if(NOT _STATUS_CODE EQUAL 0)
     message(STATUS "File downloaded successfully.")
-else()
+  else()
     message(FATAL_ERROR "File download failed.")
-endif()
+  endif()
+endfunction()
+
+# Download the test file
+download_file(${CMAKE_BINARY_DIR}/nan-2.18.0.tgz https://registry.npmjs.org/nan/-/nan-2.18.0.tgz)
+
+# Create a test to check that the file was downloaded successfully
+add_test(DownloadTestFile
+  ${CMAKE_COMMAND} -E EXIST ${CMAKE_BINARY_DIR}/nan-2.18.0.tgz
+)
