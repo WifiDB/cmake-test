@@ -17,6 +17,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - runs-on: ubuntu-22.04
+            arch: x86_64
           - runs-on: macos-13
             arch: x86_64
           - runs-on: macos-14
@@ -47,14 +49,6 @@ jobs:
         if: runner.os == 'MacOS' || runner.os == 'Linux'
         run: uname -m
 
-      - name: Cache cmake-node-module deps
-        uses: actions/cache@v4
-        with:
-          # downloaded with platform/node/cmake/module.cmake
-          path: build/headers
-          key: ${{ runner.os }}-${{ runner.arch }}-cmake-node-module-deps
-
-      - name: Configure maplibre-native (MacOS)
-        if: runner.os == 'MacOS'
+      - name: Configure
         run: |
           cmake . -B build
