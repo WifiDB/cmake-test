@@ -51,4 +51,4 @@ jobs:
 
       - name: Configure
         run: |
-          cmake . -B build
+          cmake -B build
