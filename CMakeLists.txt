@@ -6,8 +6,10 @@ function(download_file dst_file src_url)
   # Create the destination directory if it doesn't exist
   file(MAKE_DIRECTORY ${dst_file})
 
+  message(dst_file="${dst_file}")
+  message(src_url="${src_url}")
   # Download the file
-  file(DOWNLOAD ${src_url} ${dst_file} STATUS _STATUS TLS_VERIFY OFF)
+  file(DOWNLOAD ${src_url} ${dst_file} STATUS _STATUS TLS_VERIFY ON)
   list(GET _STATUS 0 _STATUS_CODE)
   if(NOT _STATUS_CODE EQUAL 0)
     message(STATUS "File downloaded successfully.")
