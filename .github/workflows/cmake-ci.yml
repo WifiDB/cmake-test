@@ -49,6 +49,40 @@ jobs:
         if: runner.os == 'MacOS' || runner.os == 'Linux'
         run: uname -m
 
+      - name: Install dependencies (MacOS)
+        if: runner.os == 'MacOS'
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: 1
+          HOMEBREW_NO_INSTALL_CLEANUP: 1
+        run: |
+          brew list openssl || brew install openssl
+          brew list cmake || brew install cmake
+          brew list ccache || brew install ccache
+          brew list ninja || brew install ninja
+          brew list pkg-config || brew install pkg-config
+          brew list glfw || brew install glfw
+          brew list libuv || brew install libuv
+
+      - name: Install dependencies (Linux)
+        if: runner.os == 'Linux'
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ccache \
+            ninja-build \
+            pkg-config \
+            xvfb \
+            libcurl4-openssl-dev \
+            libglfw3-dev \
+            libuv1-dev \
+            g++-12 \
+            libjpeg-dev \
+            libpng-dev \
+            libwebp-dev
+          /usr/sbin/update-ccache-symlinks
+
       - name: Configure
         run: |
           cmake --version 
@@ -56,4 +90,6 @@ jobs:
           ls -l
           chmod -R 777 build
           ls -l
-          cmake -B build
+          cmake . -B build \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ env.BUILDTYPE }}
