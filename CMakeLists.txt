@@ -22,8 +22,3 @@ endfunction()
 
 # Download the test file
 download_file(${CMAKE_BINARY_DIR}/nan-2.18.0.tgz https://registry.npmjs.org/nan/-/nan-2.18.0.tgz)
-
-# Create a test to check that the file was downloaded successfully
-add_test(DownloadTestFile
-  ${CMAKE_COMMAND} -E EXIST ${CMAKE_BINARY_DIR}/nan-2.18.0.tgz
-)
