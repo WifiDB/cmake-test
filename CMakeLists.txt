@@ -9,7 +9,7 @@ function(download_file dst_file src_url)
   message(dst_file="${dst_file}")
   message(src_url="${src_url}")
   # Download the file
-  file(DOWNLOAD "${src_url}" "${dst_file}" STATUS _STATUS TLS_VERIFY ON)
+  file(DOWNLOAD "${src_url}" "${dst_file}" STATUS _STATUS TLS_VERIFY OFF)
   list(GET _STATUS 0 _STATUS_CODE)
   if(NOT _STATUS_CODE EQUAL 0)
     list(GET _STATUS 1 _STATUS_MESSAGE)
