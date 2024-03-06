@@ -53,4 +53,7 @@ jobs:
         run: |
           cmake --version 
           mkdir -p build
+          ls -l
+          chmod +w build
+          ls -l
           cmake -B build
