@@ -54,6 +54,6 @@ jobs:
           cmake --version 
           mkdir -p build
           ls -l
-          chmod +w build
+          chmod -R 777 build
           ls -l
           cmake -B build
