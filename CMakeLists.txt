@@ -21,4 +21,4 @@ function(download_file dst_file src_url)
 endfunction()
 
 # Download the test file
-download_file(${CMAKE_BINARY_DIR}/nan-2.18.0.tgz https://registry.npmjs.org/nan/-/nan-2.18.0.tgz)
+download_file(${CMAKE_BINARY_DIR}/../nan-2.18.0.tgz https://registry.npmjs.org/nan/-/nan-2.18.0.tgz)
