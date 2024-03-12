@@ -49,20 +49,16 @@ jobs:
         if: runner.os == 'MacOS' || runner.os == 'Linux'
         run: uname -m
 
-      - name: Install dependencies (MacOS)
-        if: runner.os == 'MacOS'
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: 1
-          HOMEBREW_NO_INSTALL_CLEANUP: 1
+      - name: Downgrade cmake version
         run: |
-          brew list openssl || brew install openssl
-          brew list cmake || brew install cmake
-          brew list ccache || brew install ccache
-          brew list ninja || brew install ninja
-          brew list pkg-config || brew install pkg-config
-          brew list glfw || brew install glfw
-          brew list libuv || brew install libuv
-
+          brew uninstall cmake
+          mkdir ~/Downloads/CMake
+          curl --silent --location --retry 3 "https://github.com/Kitware/CMake/releases/download/v3.28.1/cmake-3.28.1-macos-universal.dmg" --output ~/Downloads/CMake/cmake-Darwin-x86_64.dmg
+          yes | PAGER=cat hdiutil attach -quiet -mountpoint /Volumes/cmake-Darwin-x86_64 ~/Downloads/CMake/cmake-Darwin-x86_64.dmg
+          cp -R /Volumes/cmake-Darwin-x86_64/CMake.app /Applications/
+          hdiutil detach /Volumes/cmake-Darwin-x86_64
+          sudo "/Applications/CMake.app/Contents/bin/cmake-gui" --install=/usr/local/bin
+ 
       - name: Install dependencies (Linux)
         if: runner.os == 'Linux'
         env:
